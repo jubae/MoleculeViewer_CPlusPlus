@@ -334,11 +334,8 @@ void MoleculeGLWidget::paintGL()
 
     program->release();
 
-
     glPushAttrib(GL_ALL_ATTRIB_BITS);
     glPushMatrix();
-
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, width(), height(), 0, -1, 1);
@@ -347,7 +344,7 @@ void MoleculeGLWidget::paintGL()
 
     if (moleculeData.Atoms.size()) // --- If a Molecule is loaded ---
     {
-
+        // Molecule Name
         QPainter painter;
         painter.begin(this);
         painter.setPen(Qt::white);
@@ -356,9 +353,9 @@ void MoleculeGLWidget::paintGL()
         QRect textRect(20, 20, width() - 40, 35);
         painter.drawText(textRect, Qt::AlignLeft | Qt::AlignTop, moleculeData.MoleculeName);
 
+        // Instructions
         painter.setFont(QFont("Arial", 12));
         painter.setPen(Qt::lightGray);
-
 
         QRect LMBtextRect(20, 100, width() - 40, 30);
         painter.drawText(LMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Left Click : Rotate Molecule");
@@ -376,7 +373,7 @@ void MoleculeGLWidget::paintGL()
         QRect WheeltextRect(20, 160, width() - 40, 30);
         painter.drawText(WheeltextRect, Qt::AlignLeft | Qt::AlignTop, "Mouse Wheel : Zoom Molecule");
 
-
+        // Atoms Number
         painter.setPen(Qt::green);
         painter.setFont(QFont("Courier New", 10, QFont::Bold));
         QRect anotherTextRect(10, 50, width() - 20, 20);
@@ -389,19 +386,17 @@ void MoleculeGLWidget::paintGL()
         QPainter painter;
         painter.begin(this);
         painter.setPen(Qt::white);
-        painter.setFont(QFont("Arial", 40));
+        painter.setFont(QFont("Courier New", 24, QFont::Bold));
 
-
+        // Main Load Molecule Message
         QRect textRect(0, 0, width(), height());
         painter.drawText(textRect, Qt::AlignCenter, "Use the File menu to \n load a molecule");
 
         painter.end();
     }
 
-
     glPopMatrix();
     glPopAttrib();
-
 
     GLenum error = glGetError();
     if (error != GL_NO_ERROR)
