@@ -103,7 +103,7 @@ AtomMeshData MoleculeGLWidget::createCylinder(float radius, float height, int sl
         float x = radius * std::cos(theta);
         float z = radius * std::sin(theta);
 
-        // Bottom vertex
+        // --- Bottom vertex ---
         meshData.vertices.append(x);
         meshData.vertices.append(-height / 2.0f);
         meshData.vertices.append(z);
@@ -113,7 +113,7 @@ AtomMeshData MoleculeGLWidget::createCylinder(float radius, float height, int sl
         meshData.normals.append(normal.y());
         meshData.normals.append(normal.z());
 
-        // Top vertex
+        // --- Top vertex ---
         meshData.vertices.append(x);
         meshData.vertices.append(height / 2.0f);
         meshData.vertices.append(z);

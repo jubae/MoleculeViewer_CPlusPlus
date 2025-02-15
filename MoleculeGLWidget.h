@@ -62,7 +62,7 @@ private:
     QString atomColourToString(EAtomColour colour);
     AtomMeshData createCylinder(float radius, float height, int slices);
 
-    int getAtomIndexFromNumber(int atomNumber) const; // Add this line
+    int getAtomIndexFromNumber(int atomNumber) const;
     int SelectedAtom = 0;
 
     void centerAtoms();
