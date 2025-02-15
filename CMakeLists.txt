@@ -18,8 +18,6 @@ set(PROJECT_SOURCES
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
-    MoleculeFactory.h
-    MoleculeFactory.cpp
     MoleculeGLWidget.h
     MoleculeGLWidget.cpp
     SDFParser.h
