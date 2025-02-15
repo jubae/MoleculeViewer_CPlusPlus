@@ -5,13 +5,6 @@
 #include <QObject>
 #include <QTOpenGL>
 
-struct AtomPosition
-{
-    float x;
-    float y;
-    float z;
-};
-
 enum class EAtomColour
 {
     White,
@@ -86,6 +79,5 @@ struct AtomMeshData
     QVector<GLuint> indices;
     QVector<GLfloat> normals;
 };
-
 
 #endif //DATASTRUCTS_H

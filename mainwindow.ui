@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QOpenGLWidget" name="openGLWidget"/>
+     <widget class="MoleculeGLWidget" name="MoleculeWidget"/>
     </item>
    </layout>
   </widget>
@@ -34,16 +34,39 @@
      <string>File</string>
     </property>
     <addaction name="actionLoadMolecule"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLoadMolecule">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::FolderOpen"/>
+   </property>
    <property name="text">
     <string>LoadMolecule</string>
    </property>
   </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit Molecule Viewer</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MoleculeGLWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>MoleculeGLWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

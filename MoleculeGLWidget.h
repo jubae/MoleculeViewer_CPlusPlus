@@ -1,4 +1,3 @@
-// MoleculeGLWidget.h
 #ifndef MOLECULEGLWIDGET_H
 #define MOLECULEGLWIDGET_H
 
@@ -51,17 +50,23 @@ private:
 
     QMatrix4x4 moleculeMatrix;
     QMatrix4x4 modelMatrix;
+
     QVector<AtomMeshData> atomMeshes;
+
     QPointF lastMousePos;
+
     QVector3D centeringTranslation;
-    void centerAtoms();
-    QMap<EAtomColour, QVector3D> atomColorMap;
-    EAtomColour getAtomColor(EAtomType atomType);
+
+    QMap<EAtomColour, QVector3D> atomColourMap;
+    EAtomColour getAtomColour(EAtomType atomType);
     QString atomColourToString(EAtomColour colour);
     AtomMeshData createCylinder(float radius, float height, int slices);
-    void renderBonds();
+
     int getAtomIndexFromNumber(int atomNumber) const; // Add this line
     int SelectedAtom = 0;
+
+    void centerAtoms();
+    void renderBonds();
 };
 
 #endif // MOLECULEGLWIDGET_H

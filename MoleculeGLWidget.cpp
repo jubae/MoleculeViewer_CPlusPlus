@@ -19,14 +19,16 @@ MoleculeGLWidget::~MoleculeGLWidget()
 {
     makeCurrent();
     delete program;
-    if (atomVao && atomVao->isCreated()) {
+    if (atomVao && atomVao->isCreated())
+    {
         atomVao->destroy();
         delete atomVao;
     }
     if (atomVbo) glDeleteBuffers(1, &atomVbo);
     if (atomEbo) glDeleteBuffers(1, &atomEbo);
 
-    if (bondVao && bondVao->isCreated()) {
+    if (bondVao && bondVao->isCreated()) 
+    {
         bondVao->destroy();
         delete bondVao;
     }
@@ -41,12 +43,14 @@ void MoleculeGLWidget::loadMolecule(const MoleculeData& MoleculeToGenerate)
 {
     moleculeData = MoleculeToGenerate;
     atomMeshes.clear();
-    for (const auto& atom : moleculeData.Atoms) {
+    for (const auto& atom : moleculeData.Atoms) 
+    {
         atomMeshes.append(createAtom(atom.AtomScale, 32, 32));
     }
+
     centerAtoms();
-    // Add this call to createCylinder() when a molecule is loaded
-    cylinderMesh = createCylinder(0.025f, 1.0f, 16); // Adjust radius and slices as desired
+
+    cylinderMesh = createCylinder(0.025f, 1.0f, 16);
 
     update();
 }
@@ -93,8 +97,8 @@ AtomMeshData MoleculeGLWidget::createCylinder(float radius, float height, int sl
 {
     AtomMeshData meshData;
 
-    // Create vertices and normals, centered around the origin.
-    for (int i = 0; i <= slices; ++i) {
+    for (int i = 0; i <= slices; ++i) 
+    {
         float theta = 2.0f * M_PI * static_cast<float>(i) / static_cast<float>(slices);
         float x = radius * std::cos(theta);
         float z = radius * std::sin(theta);
@@ -120,15 +124,17 @@ AtomMeshData MoleculeGLWidget::createCylinder(float radius, float height, int sl
         meshData.normals.append(normal.z());
     }
 
-    // --- Corrected Indices Generation ---
-    for (int i = 0; i < slices; ++i) { // Iterate up to 'slices', not 'slices + 1'
+
+    for (int i = 0; i < slices; ++i) 
+    {
         GLuint index1 = 2 * i;
         GLuint index2 = 2 * i + 1;
-        GLuint index3 = 2 * (i + 1);     // Wrap around: (i + 1) % (slices +1) * 2
-        GLuint index4 = 2 * (i + 1) + 1; // Wrap around: (i + 1) % (slices + 1) * 2 + 1
+        GLuint index3 = 2 * (i + 1); 
+        GLuint index4 = 2 * (i + 1) + 1;
 
-        //Ensure that when we get to last slice we dont use index out of bounds
-        if (i == slices - 1) {
+
+        if (i == slices - 1)
+        {
             index3 = 0;
             index4 = 1;
         }
@@ -151,16 +157,16 @@ void MoleculeGLWidget::initializeGL()
     initializeOpenGLFunctions();
     program = new QOpenGLShaderProgram(this);
 
-    atomColorMap[EAtomColour::White] = QVector3D(1.0f, 1.0f, 1.0f);
-    atomColorMap[EAtomColour::Red] = QVector3D(1.0f, 0.0f, 0.0f);
-    atomColorMap[EAtomColour::Green] = QVector3D(0.0f, 1.0f, 0.0f);
-    atomColorMap[EAtomColour::Blue] = QVector3D(0.0f, 0.0f, 1.0f);
-    atomColorMap[EAtomColour::Grey] = QVector3D(0.5f, 0.5f, 0.5f);
-    atomColorMap[EAtomColour::Yellow] = QVector3D(1.0f, 1.0f, 0.0f);
-    atomColorMap[EAtomColour::Orange] = QVector3D(1.0f, 0.5f, 0.0f);
-    atomColorMap[EAtomColour::DarkRed] = QVector3D(0.5f, 0.0f, 0.0f);
+    atomColourMap[EAtomColour::White] = QVector3D(1.0f, 1.0f, 1.0f);
+    atomColourMap[EAtomColour::Red] = QVector3D(1.0f, 0.0f, 0.0f);
+    atomColourMap[EAtomColour::Green] = QVector3D(0.0f, 1.0f, 0.0f);
+    atomColourMap[EAtomColour::Blue] = QVector3D(0.0f, 0.0f, 1.0f);
+    atomColourMap[EAtomColour::Grey] = QVector3D(0.5f, 0.5f, 0.5f);
+    atomColourMap[EAtomColour::Yellow] = QVector3D(1.0f, 1.0f, 0.0f);
+    atomColourMap[EAtomColour::Orange] = QVector3D(1.0f, 0.5f, 0.0f);
+    atomColourMap[EAtomColour::DarkRed] = QVector3D(0.5f, 0.0f, 0.0f);
 
-    // --- Vertex Shader (Corrected) ---
+    // --- Vertex Shader ---
     program->addShaderFromSourceCode(QOpenGLShader::Vertex,
         "#version 330 core\n"
         "layout (location = 0) in vec3 position;\n"
@@ -168,57 +174,57 @@ void MoleculeGLWidget::initializeGL()
         "uniform mat4 matrix;\n"
         "uniform mat4 projection;\n"
         "out vec3 fragNormal;\n"
-        "out vec3 fragPosWorld;\n" // Transformed position (world space)
-        "out vec3 fragPosLocal;\n" // Original, local position
+        "out vec3 fragPosWorld;\n"
+        "out vec3 fragPosLocal;\n"
         "void main() {\n"
         "   gl_Position = projection * matrix * vec4(position, 1.0);\n"
         "   fragNormal = mat3(transpose(inverse(matrix))) * normal;\n"
-        "   fragPosWorld = vec3(matrix * vec4(position, 1.0));\n"// World-space position
-        "   fragPosLocal = position;\n" //  Local, untransformed position
+        "   fragPosWorld = vec3(matrix * vec4(position, 1.0));\n"
+        "   fragPosLocal = position;\n"
         "}\n");
 
-    // --- Fragment Shader (Corrected) ---
+    // --- Fragment Shader ---
     program->addShaderFromSourceCode(QOpenGLShader::Fragment,
         "#version 330 core\n"
         "in vec3 fragNormal;\n"
-        "in vec3 fragPosWorld;\n" // For lighting
-        "in vec3 fragPosLocal;\n" // For color split
-        "uniform vec3 atomColor;\n"
-        "uniform vec3 atomColor2;\n"
+        "in vec3 fragPosWorld;\n"
+        "in vec3 fragPosLocal;\n"
+        "uniform vec3 atomColour;\n"
+        "uniform vec3 atomColour2;\n"
         "uniform vec3 lightDir;\n"
-        "uniform vec3 lightColor;\n" // Color of the light
-        "uniform vec3 viewPos;\n" //Camera Position
-        "out vec4 fragColor;\n"
+        "uniform vec3 lightColour;\n"
+        "uniform vec3 viewPos;\n"
+        "out vec4 fragColour;\n"
         "void main() {\n"
         "   float ambientStrength = 0.3;\n"
-        "   vec3 ambient = ambientStrength * lightColor;\n"
+        "   vec3 ambient = ambientStrength * lightColour;\n"
         "   vec3 norm = normalize(fragNormal);\n"
         "   float diff = max(dot(norm, lightDir), 0.0);\n"
-        "   vec3 diffuse = diff * lightColor;\n"
+        "   vec3 diffuse = diff * lightColour;\n"
         "   float specularStrength = 0.5;\n"
         "   vec3 viewDir = normalize(viewPos - fragPosWorld);\n"
         "   vec3 reflectDir = reflect(-lightDir, norm);\n"
         "   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n"
-        "   vec3 specular = specularStrength * spec * lightColor;\n"
-        "   vec3 result = (ambient + diffuse + specular) * (fragPosLocal.y < 0.0 ? atomColor : atomColor2);\n"
-        "   fragColor = vec4(result, 1.0);\n"
+        "   vec3 specular = specularStrength * spec * lightColour;\n"
+        "   vec3 result = (ambient + diffuse + specular) * (fragPosLocal.y < 0.0 ? atomColour : atomColour2);\n"
+        "   fragColour = vec4(result, 1.0);\n"
         "}\n");
 
-    if (!program->link()) {
+    if (!program->link())
+    {
         qDebug() << "Shader link error:" << program->log();
         return;
     }
 
-    // --- Atom VAO Setup ---
     atomVao = new QOpenGLVertexArrayObject(this);
     atomVao->create();
     atomVao->bind();
     glGenBuffers(1, &atomVbo);
     glBindBuffer(GL_ARRAY_BUFFER, atomVbo);
-    // --- CRITICAL FIX: Attribute pointers must be set *AFTER* linking ---
-    program->enableAttributeArray(0); // Position attribute
+
+    program->enableAttributeArray(0); // Position
     program->setAttributeBuffer(0, GL_FLOAT, 0, 3, 6 * sizeof(GLfloat));
-    program->enableAttributeArray(1); // Normal attribute
+    program->enableAttributeArray(1); // Normal
     program->setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(GLfloat), 3, 6 * sizeof(GLfloat));
 
     glGenBuffers(1, &atomEbo);
@@ -231,17 +237,15 @@ void MoleculeGLWidget::initializeGL()
     bondVao->bind();
     glGenBuffers(1, &bondVbo);
     glBindBuffer(GL_ARRAY_BUFFER, bondVbo);
-    // --- CRITICAL FIX: Attribute pointers must be set *AFTER* linking ---
-    program->enableAttributeArray(0); // Position attribute
-    program->setAttributeBuffer(0, GL_FLOAT, 0, 3, 6 * sizeof(GLfloat));
-    program->enableAttributeArray(1); // Normal attribute
-    program->setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(GLfloat), 3, 6 * sizeof(GLfloat));
 
+    program->enableAttributeArray(0); // Position
+    program->setAttributeBuffer(0, GL_FLOAT, 0, 3, 6 * sizeof(GLfloat));
+    program->enableAttributeArray(1); // Normal
+    program->setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(GLfloat), 3, 6 * sizeof(GLfloat));
 
     glGenBuffers(1, &bondEbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bondEbo);
     bondVao->release();
-
 
     moleculeMatrix.setToIdentity();
     modelMatrix.setToIdentity();
@@ -254,9 +258,9 @@ void MoleculeGLWidget::initializeGL()
     QVector3D lightDir = QVector3D(1.0f, 1.0f, 1.0f).normalized();
     program->setUniformValue("lightDir", lightDir);
 
-    // --- Add light color uniform ---
-    QVector3D lightColor(1.0f, 1.0f, 1.0f); // White light
-    program->setUniformValue("lightColor", lightColor);
+    // --- Add light Colour ---
+    QVector3D lightColour(1.0f, 1.0f, 1.0f); // White light
+    program->setUniformValue("lightColour", lightColour);
 
     program->release();
 
@@ -273,21 +277,23 @@ void MoleculeGLWidget::paintGL()
     QVector3D lightDir = QVector3D(1.0f, 1.0f, 1.0f).normalized();
     program->setUniformValue("lightDir", lightDir);
 
-    // --- Pass camera position to the shader ---
+    // --- Camera position to shader ---
     QVector3D viewPos = modelMatrix.inverted().map(QVector3D(0.0f, 0.0f, 0.0f));
     program->setUniformValue("viewPos", viewPos);
 
     // --- Render Atoms ---
-    if (!moleculeData.Atoms.isEmpty() && atomMeshes.size() == moleculeData.Atoms.size()) {
-        for (int i = 0; i < moleculeData.Atoms.size(); ++i) {
+    if (!moleculeData.Atoms.isEmpty() && atomMeshes.size() == moleculeData.Atoms.size())
+    {
+        for (int i = 0; i < moleculeData.Atoms.size(); ++i)
+        {
             const auto& atom = moleculeData.Atoms[i];
             const auto& atomMesh = atomMeshes[i];
-            EAtomColour atomColor = getAtomColor(atom.AtomType);
-            QVector3D color = atomColorMap[atomColor];
-            program->setUniformValue("atomColor", color);
-            program->setUniformValue("atomColor2", color); //set same colour, to stop weird rendering issues.
+            EAtomColour atomColour = getAtomColour(atom.AtomType);
+            QVector3D Colour = atomColourMap[atomColour];
+            program->setUniformValue("atomColour", Colour);
+            program->setUniformValue("atomColour2", Colour);
 
-            // --- Apply atom scale ---
+            // --- Atom scale ---
             QMatrix4x4 finalMatrix = moleculeMatrix * modelMatrix;
             finalMatrix.translate(atom.AtomPosition);
             finalMatrix.scale(atom.AtomScale);
@@ -296,13 +302,14 @@ void MoleculeGLWidget::paintGL()
             atomVao->bind();
             glBindBuffer(GL_ARRAY_BUFFER, atomVbo);
 
-            // --- Correctly Interleave Vertex and Normal Data ---
             QVector<GLfloat> combinedData;
-            for (int j = 0; j < atomMesh.vertices.size() / 3; ++j) {
+            for (int j = 0; j < atomMesh.vertices.size() / 3; ++j)
+            {
                 // Vertex Position
                 combinedData.append(atomMesh.vertices[j * 3]);
                 combinedData.append(atomMesh.vertices[j * 3 + 1]);
                 combinedData.append(atomMesh.vertices[j * 3 + 2]);
+
                 // Normal Vector
                 combinedData.append(atomMesh.normals[j * 3]);
                 combinedData.append(atomMesh.normals[j * 3 + 1]);
@@ -311,12 +318,10 @@ void MoleculeGLWidget::paintGL()
 
             glBufferData(GL_ARRAY_BUFFER, combinedData.size() * sizeof(GLfloat), combinedData.data(), GL_STATIC_DRAW);
 
-            // --- Set Attribute Pointers (Crucial for Correct Interleaving) ---
-            program->enableAttributeArray(0); // Position attribute
-            program->setAttributeBuffer(0, GL_FLOAT, 0, 3, 6 * sizeof(GLfloat)); // Stride is 6 floats
-            program->enableAttributeArray(1); // Normal attribute
-            program->setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(GLfloat), 3, 6 * sizeof(GLfloat)); // Offset by 3 floats
-
+            program->enableAttributeArray(0);
+            program->setAttributeBuffer(0, GL_FLOAT, 0, 3, 6 * sizeof(GLfloat));
+            program->enableAttributeArray(1);
+            program->setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(GLfloat), 3, 6 * sizeof(GLfloat));
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, atomEbo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, atomMesh.indices.size() * sizeof(GLuint), atomMesh.indices.data(), GL_STATIC_DRAW);
@@ -325,96 +330,94 @@ void MoleculeGLWidget::paintGL()
         }
     }
 
-    // --- Render Bonds ---
     renderBonds();
 
-    program->release(); // Release *before* using QPainter
+    program->release();
 
-    // --- Save OpenGL State ---
+
     glPushAttrib(GL_ALL_ATTRIB_BITS);
     glPushMatrix();
 
-    // --- Set up 2D Orthographic Projection for QPainter ---
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, width(), height(), 0, -1, 1); // Left, Right, Bottom, Top, Near, Far
+    glOrtho(0, width(), height(), 0, -1, 1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    if (moleculeData.Atoms.size())
+    if (moleculeData.Atoms.size()) // --- If a Molecule is loaded ---
     {
-        // --- Draw Text OVER OpenGL Scene using QPainter ---
+
         QPainter painter;
         painter.begin(this);
-        painter.setPen(Qt::white); // Set text color (white in this example)
-        painter.setFont(QFont("Arial", 24)); // Set font and size
+        painter.setPen(Qt::white);
+        painter.setFont(QFont("Arial", 24));
 
-        // Draw the text.  QRect defines the bounding box.
-        QRect textRect(20, 20, width() - 40, 35); // Adjusted padding for clarity
+        QRect textRect(20, 20, width() - 40, 35);
         painter.drawText(textRect, Qt::AlignLeft | Qt::AlignTop, moleculeData.MoleculeName);
 
-        painter.setFont(QFont("Arial", 12)); // Set font and size
-        painter.setPen(Qt::lightGray); // Set text color (white in this example)
+        painter.setFont(QFont("Arial", 12));
+        painter.setPen(Qt::lightGray);
 
-        // Draw the text.  QRect defines the bounding box.
+
         QRect LMBtextRect(20, 100, width() - 40, 30);
         painter.drawText(LMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Left Click : Rotate Molecule");
 
-        // Draw the text.  QRect defines the bounding box.
+
         QRect MMBtextRect(20, 120, width() - 40, 30);
         painter.drawText(MMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Middle click : Pan Molecule");
 
-        // Draw the text.  QRect defines the bounding box.
+
         QRect RMBtextRect(20, 140, width() - 40, 30);
         painter.drawText(RMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Right click : Reset Molecule");
 
-        painter.setFont(QFont("Arial", 12)); // Set font and size
-        // Draw the text.  QRect defines the bounding box.
+        painter.setFont(QFont("Arial", 12));
+
         QRect WheeltextRect(20, 160, width() - 40, 30);
         painter.drawText(WheeltextRect, Qt::AlignLeft | Qt::AlignTop, "Mouse Wheel : Zoom Molecule");
 
-        // Example: Draw another text string with different formatting
+
         painter.setPen(Qt::green);
         painter.setFont(QFont("Courier New", 10, QFont::Bold));
         QRect anotherTextRect(10, 50, width() - 20, 20);
         painter.drawText(anotherTextRect, Qt::AlignRight | Qt::AlignTop, QString("Atoms: %1").arg(moleculeData.Atoms.size()));
 
-        painter.end(); // IMPORTANT: Must call end() when finished with QPainter
+        painter.end();
     }
     else
     {
-        // --- Draw Text OVER OpenGL Scene using QPainter ---
         QPainter painter;
         painter.begin(this);
-        painter.setPen(Qt::white); // Set text color (white in this example)
-        painter.setFont(QFont("Arial", 40)); // Set font and size
+        painter.setPen(Qt::white);
+        painter.setFont(QFont("Arial", 40));
 
-        // Draw the text.  QRect defines the bounding box.
-        QRect textRect(0, 0, width(), height()); // Adjusted padding for clarity
+
+        QRect textRect(0, 0, width(), height());
         painter.drawText(textRect, Qt::AlignCenter, "Use the File menu to \n load a molecule");
 
-        painter.end(); // IMPORTANT: Must call end() when finished with QPainter
-
+        painter.end();
     }
 
-    // --- Restore OpenGL State ---
+
     glPopMatrix();
     glPopAttrib();
 
-    // --- Error Checking (as before) ---
+
     GLenum error = glGetError();
-    if (error != GL_NO_ERROR) {
+    if (error != GL_NO_ERROR)
+    {
         qDebug() << "OpenGL error:" << error;
     }
 }
 
-void MoleculeGLWidget::renderBonds() {
-
+void MoleculeGLWidget::renderBonds()
+{
     bondVao->bind();
     glBindBuffer(GL_ARRAY_BUFFER, bondVbo);
-    // Combine vertices and normals for the VBO.
+
     QVector<GLfloat> combinedData;
-    for (int j = 0; j < cylinderMesh.vertices.size() / 3; ++j) {
+    for (int j = 0; j < cylinderMesh.vertices.size() / 3; ++j)
+    {
         combinedData.append(cylinderMesh.vertices[j * 3]);
         combinedData.append(cylinderMesh.vertices[j * 3 + 1]);
         combinedData.append(cylinderMesh.vertices[j * 3 + 2]);
@@ -422,13 +425,14 @@ void MoleculeGLWidget::renderBonds() {
         combinedData.append(cylinderMesh.normals[j * 3 + 1]);
         combinedData.append(cylinderMesh.normals[j * 3 + 2]);
     }
+
     glBufferData(GL_ARRAY_BUFFER, combinedData.size() * sizeof(GLfloat), combinedData.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bondEbo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, cylinderMesh.indices.size() * sizeof(GLuint), cylinderMesh.indices.data(), GL_STATIC_DRAW);
 
-
-    for (const auto& bond : moleculeData.Bonds) {
+    for (const auto& bond : moleculeData.Bonds)
+    {
         // --- Get atom indices from atom numbers ---
         int atomIndex1 = getAtomIndexFromNumber(bond.Atom1Number);
         int atomIndex2 = getAtomIndexFromNumber(bond.Atom2Number);
@@ -439,34 +443,28 @@ void MoleculeGLWidget::renderBonds() {
         QVector3D pos1 = moleculeData.Atoms[atomIndex1].AtomPosition;
         QVector3D pos2 = moleculeData.Atoms[atomIndex2].AtomPosition;
 
-        QVector3D color1 = atomColorMap[getAtomColor(moleculeData.Atoms[atomIndex1].AtomType)];
-        QVector3D color2 = atomColorMap[getAtomColor(moleculeData.Atoms[atomIndex2].AtomType)];
+        QVector3D Colour1 = atomColourMap[getAtomColour(moleculeData.Atoms[atomIndex1].AtomType)];
+        QVector3D Colour2 = atomColourMap[getAtomColour(moleculeData.Atoms[atomIndex2].AtomType)];
 
         QVector3D bondVector = pos2 - pos1;
         float bondLength = bondVector.length();
         QVector3D bondDirection = bondVector.normalized();
 
-        // --- Calculate the midpoint ---
+        // --- Calculate Bond midpoint ---
         QVector3D midPoint = (pos1 + pos2) / 2.0f;
 
-
-        // 4.  Create the transformation matrix.
         QMatrix4x4 bondMatrix = moleculeMatrix * modelMatrix;
 
-        // --- Translate to MIDPOINT ---
         bondMatrix.translate(midPoint);
 
-        // 5. Rotation
         QQuaternion rotation = QQuaternion::rotationTo(QVector3D(0, 1, 0), bondDirection);
         bondMatrix.rotate(rotation);
 
-        // --- Scale to FULL bondLength ---
         bondMatrix.scale(1.0f, bondLength, 1.0f); // Scale AFTER translation and rotation
 
-
         program->setUniformValue("matrix", bondMatrix);
-        program->setUniformValue("atomColor", color1);
-        program->setUniformValue("atomColor2", color2);
+        program->setUniformValue("atomColour", Colour1);
+        program->setUniformValue("atomColour2", Colour2);
 
         int numBonds = 1;
         if (bond.BondType == EBondType::Double) numBonds = 2;
@@ -478,8 +476,10 @@ void MoleculeGLWidget::renderBonds() {
         {
             QMatrix4x4 instanceMatrix = bondMatrix;
 
-            if (numBonds > 1) {
+            if (numBonds > 1)
+            {
                 QVector3D perpendicular = QVector3D::crossProduct(bondDirection, QVector3D(0, 1, 0));
+
                 if (perpendicular.lengthSquared() < 0.0001f)
                 {
                     perpendicular = QVector3D::crossProduct(bondDirection, QVector3D(1, 0, 0));
@@ -489,10 +489,13 @@ void MoleculeGLWidget::renderBonds() {
                 float offset = (i - (numBonds - 1) / 2.0f) * bondSpacing;
                 instanceMatrix.translate(perpendicular * offset);
             }
+
             program->setUniformValue("matrix", instanceMatrix);
+
             glDrawElements(GL_TRIANGLES, cylinderMesh.indices.size(), GL_UNSIGNED_INT, 0);
         }
     }
+
     bondVao->release();
 }
 
@@ -500,12 +503,17 @@ void MoleculeGLWidget::renderBonds() {
 void MoleculeGLWidget::resizeGL(int w, int h)
 {
     float aspectRatio = static_cast<float>(w) / static_cast<float>(h ? h : 1);
+
     int side = qMin(w, h);
+
     int viewportX = (w - side) / 2;
     int viewportY = (h - side) / 2;
+
     glViewport(viewportX, viewportY, side, side);
+
     QMatrix4x4 projection;
     projection.perspective(45.0f, aspectRatio, 0.1f, 100.0f);
+
     program->bind();
     program->setUniformValue("projection", projection);
     program->release();
@@ -522,7 +530,8 @@ void MoleculeGLWidget::centerAtoms()
         std::numeric_limits<float>::lowest(),
         std::numeric_limits<float>::lowest());
 
-    for (const auto& atom : moleculeData.Atoms) {
+    for (const auto& atom : moleculeData.Atoms)
+    {
         minPos.setX(qMin(minPos.x(), atom.AtomPosition.x()));
         minPos.setY(qMin(minPos.y(), atom.AtomPosition.y()));
         minPos.setZ(qMin(minPos.z(), atom.AtomPosition.z()));
@@ -534,30 +543,31 @@ void MoleculeGLWidget::centerAtoms()
     QVector3D center = (minPos + maxPos) / 2.0f;
     float maxExtent = qMax(maxPos.x() - minPos.x(), qMax(maxPos.y() - minPos.y(), maxPos.z() - minPos.z()));
 
-    // --- MODIFIED: Use a larger divisor for a smaller initial scale ---
-    float scaleFactor = 1.0f / maxExtent; // was 2.0f / maxExtent;
+
+    float scaleFactor = 1.0f / maxExtent;
 
     moleculeMatrix.setToIdentity();
     modelMatrix.setToIdentity();
 
-    // --- MODIFIED: Store the centering translation ---
     centeringTranslation = center;
 
-    // --- MODIFIED: Apply transformations in the correct order ---
-    modelMatrix.translate(0.0f, 0.0f, -1.5f); // Move camera BACK *first*
-    modelMatrix.scale(scaleFactor);          // *Then* scale
-    modelMatrix.translate(-center);            // *Then* center
-
+    modelMatrix.translate(0.0f, 0.0f, -1.5f);  // Move camera BACK *first*
+    modelMatrix.scale(scaleFactor);            // *Then* scale
+    modelMatrix.translate(-center);            // *Then* center to get view to be right at start
 
     update();
 }
 
-void MoleculeGLWidget::wheelEvent(QWheelEvent* event) {
+void MoleculeGLWidget::wheelEvent(QWheelEvent* event)
+{
     float zoomFactor = 1.0f + event->angleDelta().y() / 1000.0f;
+
     modelMatrix.translate(centeringTranslation);
     modelMatrix.scale(zoomFactor);
     modelMatrix.translate(-centeringTranslation);
+
     update();
+
     event->accept();
 }
 
@@ -614,50 +624,57 @@ void MoleculeGLWidget::mouseMoveEvent(QMouseEvent* event)
     }
 }
 
-EAtomColour MoleculeGLWidget::getAtomColor(EAtomType atomType) {
-    switch (atomType) {
-    case EAtomType::Hydrogen: return EAtomColour::White;
-    case EAtomType::Boron: return EAtomColour::DarkRed;
-    case EAtomType::Carbon: return EAtomColour::Grey;
-    case EAtomType::Nitrogen: return EAtomColour::Blue;
-    case EAtomType::Oxygen: return EAtomColour::Red;
-    case EAtomType::Fluorine: return EAtomColour::DarkRed;
-    case EAtomType::Silicon: return EAtomColour::DarkRed;
-    case EAtomType::Phosphorus: return EAtomColour::Orange;
-    case EAtomType::Sulphur: return EAtomColour::Yellow;
-    case EAtomType::Chlorine: return EAtomColour::Green;
-    case EAtomType::Copper: return EAtomColour::DarkRed;
-    case EAtomType::Zinc: return EAtomColour::DarkRed;
-    case EAtomType::Bromine: return EAtomColour::DarkRed;
-    case EAtomType::Silver: return EAtomColour::DarkRed;
-    case EAtomType::Iodine: return EAtomColour::DarkRed;
-    case EAtomType::Gold: return EAtomColour::DarkRed;
-    case EAtomType::Mercury: return EAtomColour::DarkRed;
-    case EAtomType::Metal: return EAtomColour::DarkRed;
-    default: return EAtomColour::DarkRed; // Default color for Unknown
+EAtomColour MoleculeGLWidget::getAtomColour(EAtomType atomType)
+{
+    switch (atomType)
+    {
+        case EAtomType::Hydrogen: return EAtomColour::White;
+        case EAtomType::Boron: return EAtomColour::DarkRed;
+        case EAtomType::Carbon: return EAtomColour::Grey;
+        case EAtomType::Nitrogen: return EAtomColour::Blue;
+        case EAtomType::Oxygen: return EAtomColour::Red;
+        case EAtomType::Fluorine: return EAtomColour::DarkRed;
+        case EAtomType::Silicon: return EAtomColour::DarkRed;
+        case EAtomType::Phosphorus: return EAtomColour::Orange;
+        case EAtomType::Sulphur: return EAtomColour::Yellow;
+        case EAtomType::Chlorine: return EAtomColour::Green;
+        case EAtomType::Copper: return EAtomColour::DarkRed;
+        case EAtomType::Zinc: return EAtomColour::DarkRed;
+        case EAtomType::Bromine: return EAtomColour::DarkRed;
+        case EAtomType::Silver: return EAtomColour::DarkRed;
+        case EAtomType::Iodine: return EAtomColour::DarkRed;
+        case EAtomType::Gold: return EAtomColour::DarkRed;
+        case EAtomType::Mercury: return EAtomColour::DarkRed;
+        case EAtomType::Metal: return EAtomColour::DarkRed;
+        default: return EAtomColour::DarkRed; // if AtomType is unknown this is default colour
     }
 }
 
 QString MoleculeGLWidget::atomColourToString(EAtomColour colour)
 {
-    switch (colour) {
-    case EAtomColour::White: return "White";
-    case EAtomColour::Red: return "Red";
-    case EAtomColour::Green: return "Green";
-    case EAtomColour::Blue: return "Blue";
-    case EAtomColour::Grey: return "Grey";
-    case EAtomColour::Yellow: return "Yellow";
-    case EAtomColour::Orange: return "Orange";
-    case EAtomColour::DarkRed: return "DarkRed";
-    default: return "Unknown";
+    switch (colour)
+    {
+        case EAtomColour::White: return "White";
+        case EAtomColour::Red: return "Red";
+        case EAtomColour::Green: return "Green";
+        case EAtomColour::Blue: return "Blue";
+        case EAtomColour::Grey: return "Grey";
+        case EAtomColour::Yellow: return "Yellow";
+        case EAtomColour::Orange: return "Orange";
+        case EAtomColour::DarkRed: return "DarkRed";
+        default: return "Unknown";
     }
 }
 
-int MoleculeGLWidget::getAtomIndexFromNumber(int atomNumber) const {
-    for (int i = 0; i < moleculeData.Atoms.size(); ++i) {
-        if (moleculeData.Atoms[i].AtomNumber == atomNumber) {
-            return i; // Return the index if the atom number matches
+int MoleculeGLWidget::getAtomIndexFromNumber(int atomNumber) const
+{
+    for (int i = 0; i < moleculeData.Atoms.size(); ++i)
+    {
+        if (moleculeData.Atoms[i].AtomNumber == atomNumber)
+        {
+            return i;
         }
     }
-    return -1; // Return -1 if not found (should be handled with an assertion)
+
+    return -1;
 }

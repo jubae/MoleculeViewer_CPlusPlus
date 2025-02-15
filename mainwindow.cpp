@@ -3,17 +3,15 @@
 #include "SDFParser.h"
 
 #include <QFileDialog>
+#include <QMessageBox>
+#include <QApplication>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    moleculeGLWidget = new MoleculeGLWidget(this); // Create the OpenGL widget
-    setCentralWidget(moleculeGLWidget); // Set it as the central widget
-
     connect(ui->actionLoadMolecule, &QAction::triggered, this, &MainWindow::onLoadMolecule);
+    connect(ui->actionExit, &QAction::triggered, this, &MainWindow::onExit);
 }
 
 MainWindow::~MainWindow()
@@ -24,6 +22,7 @@ MainWindow::~MainWindow()
 void MainWindow::onLoadMolecule()
 {
     QString MoleculeFilePath = QFileDialog::getOpenFileName(this, "Load Molecule", "", "SDF Files (*.sdf)");
+
     if (!MoleculeFilePath.isEmpty())
     {
         LoadedMolecule.Atoms.clear();
@@ -35,8 +34,18 @@ void MainWindow::onLoadMolecule()
 
         if (ReadSuccessful)
         {
-            moleculeGLWidget->loadMolecule(LoadedMolecule);
+            ui->MoleculeWidget->loadMolecule(LoadedMolecule);
+        }
+        else
+        {
+            QMessageBox::information(nullptr, "Information", "Unable to parse the selected file.");
         }
 
     }
 }
+
+void MainWindow::onExit()
+{
+    QApplication::quit();
+}
+

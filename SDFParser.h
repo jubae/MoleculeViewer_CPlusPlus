@@ -13,8 +13,10 @@ public:
 
 private:
 	std::vector<std::string> SplitLine(const std::string& line);
+
 	EAtomType GetAtomType(const std::string& AtomSymbol);
 	EBondType GetBondType(const int& BondSymbol);
+
 	std::string getMoleculeName(const std::string& path);
 };
 

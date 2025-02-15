@@ -20,10 +20,10 @@ public:
 
 private slots:
     void onLoadMolecule();
+    void onExit();
 
 private:
     Ui::MainWindow *ui;
     MoleculeData LoadedMolecule;
-    MoleculeGLWidget* moleculeGLWidget; // Add this member
 };
 #endif // MAINWINDOW_H
