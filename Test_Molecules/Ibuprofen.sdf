@@ -1,0 +1,108 @@
+
+Marvin  11200711372D          
+
+ 15 15  0  0  0  0            999 V2000
+    0.0000   -0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+   -0.7145   -0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145    0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145   -0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+   -0.7145    0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1.4289   -0.8250    0.0000 C   0  0  3  0  0  0  0  0  0  0  0  0
+    2.1434   -0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.1434    0.4125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    2.8579   -0.8250    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    1.4289   -1.6500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+   -1.4289    0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+   -2.8579    0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+   -2.1434    0.4125    0.0000 C   0  0  3  0  0  0  0  0  0  0  0  0
+   -2.1434   -0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+  2  1  1  0  0  0  0
+  4  3  1  0  0  0  0
+  1  4  2  0  0  0  0
+  7  4  1  0  0  0  0
+  5  3  2  0  0  0  0
+  2  6  2  0  0  0  0
+  6  5  1  0  0  0  0
+ 12  6  1  0  0  0  0
+  8  7  1  0  0  0  0
+ 11  7  1  0  0  0  0
+  9  8  2  0  0  0  0
+ 10  8  1  0  0  0  0
+ 12 14  1  0  0  0  0
+ 14 13  1  0  0  0  0
+ 14 15  1  0  0  0  0
+M  END
+> <ID>
+CHEBI:5855
+
+> <NAME>
+ibuprofen
+
+> <DEFINITION>
+A monocarboxylic acid that is propionic acid in which one of the hydrogens at position 2 is substituted by a 4-(2-methylpropyl)phenyl group.
+
+> <STAR>
+3
+
+> <SYNONYM>
+Motrin; Ibuprofen; alpha-(p-isobutylphenyl)propionic acid; alpha-(4-isobutylphenyl)propionic acid; 4-isobutylhydratropic acid; 2-(4-isobutylphenyl)propanoic acid; (RS)-ibuprofen; (4-isobutylphenyl)-alpha-methylacetic acid; (+-)-p-isobutylhydratropic acid; (+-)-ibuprofen; (+-)-alpha-methyl-4-(2-methylpropyl)benzeneacetic acid; (+-)-2-(p-isobutylphenyl)propionic acid
+
+> <IUPAC_NAME>
+2-[4-(2-methylpropyl)phenyl]propanoic acid
+
+> <BRAND_NAME>
+Urem; Trendar; Tabalon; Suspren; Seclodin; Rufen; Roidenin; Pediaprofen; Nurofen; Nuprin; Nobgen; Nobfen; Mynosedin; Motrin; Medipren; Liptan; Lebrufen; Lamidon; Inoven; Inabrin; Ibutid; Ibuprocin; Ibumetin; Ibu-Attritin; Haltran; Femadon; Epobron; Ebufac; Dolo-Dolgit; Dolgit; Dolgirid; Dolgin; Butylenin; Buburone; Brufort; Brufen; Bluton; Apsifen; Anflagen; Anco; Amibufen; Advil; Adran
+
+> <FORMULA>
+C13H18O2
+
+> <MASS>
+206.28082
+
+> <MONOISOTOPIC_MASS>
+206.13068
+
+> <CHARGE>
+0
+
+> <SMILES>
+CC(C)Cc1ccc(cc1)C(C)C(O)=O
+
+> <INCHI>
+InChI=1S/C13H18O2/c1-9(2)8-11-4-6-12(7-5-11)10(3)13(14)15/h4-7,9-10H,8H2,1-3H3,(H,14,15)
+
+> <INCHIKEY>
+HEFNNWSXXWATRW-UHFFFAOYSA-N
+
+> <CAS_REGISTRY_NUMBER>
+15687-27-1
+
+> <REAXYS_REGISTRY_NUMBER>
+2049713
+
+> <CHEMIDPLUS>
+15687-27-1
+
+> <DRUGBANK_ACCESSION>
+DB01050
+
+> <KEGG_COMPOUND_ACCESSION>
+C01588
+
+> <KEGG_DRUG_ACCESSION>
+D00126
+
+> <LINCS_ACCESSION>
+LSM-1354
+
+> <NIST_CHEMISTRY_WEBBOOK>
+15687-27-1
+
+> <WIKIPEDIA_ACCESSION>
+Ibuprofen
+
+> <PUBMED_CITATION>
+11433218; 12723739; 14562167; 15506544; 16176022; 18335846; 18697608; 21368281; 24168233; 25521617; 25708941; 25915907; 29756342
+
+$$$$
