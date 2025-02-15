@@ -358,20 +358,20 @@ void MoleculeGLWidget::paintGL()
         painter.setPen(Qt::lightGray);
 
         QRect LMBtextRect(20, 100, width() - 40, 30);
-        painter.drawText(LMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Left Click : Rotate Molecule");
+        painter.drawText(LMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Left Click : Rotate");
 
 
         QRect MMBtextRect(20, 120, width() - 40, 30);
-        painter.drawText(MMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Middle click : Pan Molecule");
+        painter.drawText(MMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Middle click : Pan");
 
 
         QRect RMBtextRect(20, 140, width() - 40, 30);
-        painter.drawText(RMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Right click : Reset Molecule");
+        painter.drawText(RMBtextRect, Qt::AlignLeft | Qt::AlignTop, "Right click : Reset");
 
         painter.setFont(QFont("Arial", 12));
 
         QRect WheeltextRect(20, 160, width() - 40, 30);
-        painter.drawText(WheeltextRect, Qt::AlignLeft | Qt::AlignTop, "Mouse Wheel : Zoom Molecule");
+        painter.drawText(WheeltextRect, Qt::AlignLeft | Qt::AlignTop, "Mouse Wheel : Zoom");
 
         // Atoms Number
         painter.setPen(Qt::green);

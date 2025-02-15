@@ -14,7 +14,7 @@
    <string>Molecule Viewer</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="QIcon::ThemeIcon::DriveOptical"/>
+   <iconset theme="QIcon::ThemeIcon::MediaOptical"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
