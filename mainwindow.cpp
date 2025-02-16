@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(ui->actionLoadMolecule, &QAction::triggered, this, &MainWindow::onLoadMolecule);
     connect(ui->actionExit, &QAction::triggered, this, &MainWindow::onExit);
+    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
+
 }
 
 MainWindow::~MainWindow()
@@ -47,5 +49,15 @@ void MainWindow::onLoadMolecule()
 void MainWindow::onExit()
 {
     QApplication::quit();
+}
+
+void MainWindow::about()
+{
+    QMessageBox msgBox;
+    msgBox.setText("<div align=\"center\"><b>Molecule Viewer V1.0.0</b><br>Created as a demonstration by Mo <b>Davis-Afsar </b>2025<br>Created Using C++ and Qt</div>");
+    msgBox.setWindowTitle("Molecule Viewer");
+    msgBox.setWindowFlags(msgBox.windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    msgBox.setIcon(QMessageBox::NoIcon);
+    msgBox.exec();
 }
 

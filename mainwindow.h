@@ -21,6 +21,7 @@ public:
 private slots:
     void onLoadMolecule();
     void onExit();
+    void about();
 
 private:
     Ui::MainWindow *ui;
